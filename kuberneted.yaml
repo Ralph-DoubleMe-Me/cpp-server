@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpp-server
+  namespace: develop
+  labels:
+    app: cpp-server
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  minReadySeconds: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: cpp-server
+  template:
+    metadata:
+      labels:
+        app: cpp-server
+    spec:
+      volumes:
+        - name: workdir
+          emptyDir: {}
+      containers:
+        - image: 600507571789.dkr.ecr.ap-northeast-2.amazonaws.com/develop-cpp-server:241217
+          name: cpp-server
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpp-server
+  namespace: develop
+  labels:
+    app: cpp-server
+    service: cpp-server
+spec:
+  selector:
+    app: cpp-server
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+---

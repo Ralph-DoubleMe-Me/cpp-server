@@ -1,0 +1,10 @@
+services:
+  server:
+    image: cpp-server
+    build:
+      context: './'
+      dockerfile: Dockerfile
+    container_name: cpp-server
+    restart: no
+    ports:
+      - '3004:8000'
